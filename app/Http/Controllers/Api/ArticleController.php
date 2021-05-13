@@ -17,13 +17,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::applySorts(request('sort'))
-            ->paginate(
-                request('page.size'),
-                ['*'],
-                'page[number]',
-                request('page.number')
-            )->appends(request()->except('page.number'));
+        $articles = Article::query()
+            ->applySorts()
+            ->jsonPaginate();
 
         return ArticleCollection::make($articles);
     }

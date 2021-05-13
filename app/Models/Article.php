@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasSorts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Article extends Model
 {
-    use HasFactory, HasSorts;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
