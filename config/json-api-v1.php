@@ -50,7 +50,7 @@ return [
     | different here. E.g. `App\Models`.
     |
     */
-    'model-namespace' => null,
+    'model-namespace' => 'App\Models',
 
     /*
     |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
-        'posts' => \App\Post::class,
+        
     ],
 
     /*
@@ -104,7 +104,7 @@ return [
     'url' => [
         'host' => null,
         'namespace' => '/api/v1',
-        'name' => 'api:v1:',
+        'name' => 'api.v1.',
     ],
 
     /*
