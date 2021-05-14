@@ -103,4 +103,51 @@ class FilterArticlesTest extends TestCase
 
         $this->getJson($url)->assertStatus(400);
     }
+
+    /**
+     * @test
+     */
+    public function can_search_articles_by_title_and_content()
+    {
+        Article::factory(3)
+            ->sequence(
+                ['title' => 'Laravel Article', 'content' => 'Article Content'],
+                ['title' => 'PHP Article',     'content' => 'Laravel Content'],
+                ['title' => 'Another Article', 'content' => 'Another Content']
+            )
+            ->create();
+
+        $url = route('api.v1.articles.index', ['filter[search]' => '%Laravel%']);
+
+        $this->getJson($url)
+            ->assertJsonCount(2, 'data')
+            ->assertSee('Laravel Article')
+            ->assertSee('PHP Article')
+            ->assertDontSee('Another Article');
+    }
+
+    /**
+     * @test
+     */
+    public function can_search_articles_by_title_and_content_with_multiple_terms()
+    {
+        Article::factory(3)
+            ->sequence(
+                ['title' => 'Laravel Article', 'content' => 'Article Content'],
+                ['title' => 'PHP Article',     'content' => 'Laravel Content'],
+                ['title' => 'Docker Article',  'content' => 'Containers HUB.'],
+                ['title' => 'Another Article', 'content' => 'Another Content']
+
+            )
+            ->create();
+
+        $url = route('api.v1.articles.index', ['filter[search]' => '%Laravel% %Docker%']);
+
+        $this->getJson($url)
+            ->assertJsonCount(3, 'data')
+            ->assertSee('Laravel Article')
+            ->assertSee('PHP Article')
+            ->assertSee('Docker Article')
+            ->assertDontSee('Another Article');
+    }
 }

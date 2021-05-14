@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -72,7 +73,25 @@ class Article extends Model
      */
     public function scopeMonth($query, $month)
     {
-        return $query->wheremonth('created_at', $month);
+        return $query->whereMonth('created_at', $month);
+    }
+
+    /**
+     * Scope a query to search
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, $terms)
+    {
+        foreach (Str::of($terms)->explode(' ') as $term) {
+            $query->orWhere('title', 'LIKE', $term)
+                ->orWhere('content', 'LIKE', $term);
+        }
+
+        return $query;
     }
 
 
