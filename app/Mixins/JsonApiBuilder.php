@@ -7,6 +7,28 @@ use Illuminate\Support\Str;
 class JsonApiBuilder
 {
     /**
+     * Apply filters
+     *
+     * @return \Closure
+     */ 
+    public function applyFilters()
+    {
+        return function ()
+        {
+            foreach (request('filter', []) as $filter => $value) {
+
+                if (! $this->hasNamedScope($filter)) {
+                    abort(400,  "The filter '$filter' is not allowed.");
+                }
+
+                $this->{$filter}($value);
+            }
+
+            return $this;
+        };
+    }
+
+    /**
      * Apply sort fields
      *
      * @return \Closure

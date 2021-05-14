@@ -22,4 +22,59 @@ class Article extends Model
      * @var string[]
      */
     public $allowedSorts = ['title', 'content'];
+
+    /**
+     * Scope a query to filter by title
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeTitle($query, $title)
+    {
+        return $query->where('title', 'LIKE', $title);
+    }
+
+    /**
+     * Scope a query to filter by content
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeContent($query, $content)
+    {
+        return $query->where('content', 'LIKE', $content);
+    }
+
+    /**
+     * Scope a query to filter by year
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeYear($query, $year)
+    {
+        return $query->whereYear('created_at', $year);
+    }
+
+    /**
+     * Scope a query to filter by month
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMonth($query, $month)
+    {
+        return $query->wheremonth('created_at', $month);
+    }
+
+
+
 }

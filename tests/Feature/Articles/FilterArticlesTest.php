@@ -91,4 +91,16 @@ class FilterArticlesTest extends TestCase
             ->assertSee('Another Article From May')
             ->assertDontSee('Article From June');
     }
+
+    /** 
+     * @test 
+     * */
+    public function cannot_filter_articles_by_unknown_filters()
+    {
+        Article::factory()->create();
+
+        $url = route('api.v1.articles.index', ['filter[unknown]' => 2]);
+
+        $this->getJson($url)->assertStatus(400);
+    }
 }

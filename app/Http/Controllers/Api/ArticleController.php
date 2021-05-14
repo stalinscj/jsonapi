@@ -17,20 +17,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::query();
-        
-        foreach (request('filter', []) as $filter => $value) {
-            
-            if ($filter=='year') {
-                $articles->whereYear('created_at', $value);
-            } elseif ($filter=='month') {
-                $articles->whereMonth('created_at', $value);
-            } else {
-                $articles->where($filter, 'LIKE', $value);
-            }
-        }
+        $articles = Article::applyFilters()->applySorts()->jsonPaginate();
 
-        return ArticleCollection::make($articles->applySorts()->jsonPaginate());
+        return ArticleCollection::make($articles);
     }
 
     /**
