@@ -13,28 +13,28 @@ class Schema extends SchemaProvider
     protected $resourceType = 'articles';
 
     /**
-     * @param \App\Models\Article $resource
+     * @param \App\Models\Article $article
      *      the domain record being serialized.
      * @return string
      */
-    public function getId($resource)
+    public function getId($article)
     {
-        return (string) $resource->getRouteKey();
+        return (string) $article->getRouteKey();
     }
 
     /**
-     * @param \App\Models\Article $resource
+     * @param \App\Models\Article $article
      *      the domain record being serialized.
      * @return array
      */
-    public function getAttributes($resource)
+    public function getAttributes($article)
     {
         return [
-            'title'     => $resource->title,
-            'slug'      => $resource->slug,
-            'content'   => $resource->content,
-            'createdAt' => $resource->created_at,
-            'updatedAt' => $resource->updated_at,
+            'title'     => $article->title,
+            'slug'      => $article->slug,
+            'content'   => $article->content,
+            'createdAt' => $article->created_at,
+            'updatedAt' => $article->updated_at,
         ];
     }
 }

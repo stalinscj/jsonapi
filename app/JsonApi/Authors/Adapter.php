@@ -1,8 +1,8 @@
 <?php
 
-namespace App\JsonApi\Articles;
+namespace App\JsonApi\Authors;
 
-use App\Models\Article;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use CloudCreativity\LaravelJsonApi\Eloquent\AbstractAdapter;
@@ -32,7 +32,7 @@ class Adapter extends AbstractAdapter
      */
     public function __construct(StandardStrategy $paging)
     {
-        parent::__construct(new Article, $paging);
+        parent::__construct(new User, $paging);
     }
 
     /**
@@ -43,19 +43,6 @@ class Adapter extends AbstractAdapter
     protected function filter($query, Collection $filters)
     {
         $this->filterWithScopes($query, $filters);
-    }
-
-    /**
-     * Fill the article attributes
-     *
-     * @param $article
-     * @param Collection $attributes
-     * @return void
-     */
-    protected function fillAttributes($article, Collection $attributes)
-    {
-        $article->fill($attributes->toArray());
-        $article->user_id = auth()->id();
     }
 
 }

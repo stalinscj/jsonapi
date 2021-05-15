@@ -67,6 +67,7 @@ return [
     */
     'resources' => [
         'articles' => \App\Models\Article::class,
+        'authors'  => \App\Models\User::class,
     ],
 
     /*
