@@ -18,6 +18,16 @@ class Article extends Model
     protected $fillable = ['title', 'slug', 'content', 'category_id', 'user_id'];
 
     /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
      * Scope a query to filter by title
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query
