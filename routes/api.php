@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ArticleController;
+use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
+use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +14,8 @@ use App\Http\Controllers\Api\ArticleController;
 |
 */
 
-Route::get('articles/{article}', [ArticleController::class, 'show'])->name('api.v1.articles.show');
-Route::get('articles', [ArticleController::class, 'index'])->name('api.v1.articles.index');
+JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
+
+    $api->resource('articles');
+    
+});

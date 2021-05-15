@@ -66,7 +66,7 @@ return [
     | `'posts' => App\Post::class`
     */
     'resources' => [
-        
+        'articles' => \App\Models\Article::class,
     ],
 
     /*

@@ -18,13 +18,6 @@ class Article extends Model
     protected $fillable = ['title', 'content', 'category_id', 'user_id'];
 
     /**
-     * The allowed fields to sort.
-     *
-     * @var string[]
-     */
-    public $allowedSorts = ['title', 'content'];
-
-    /**
      * Scope a query to filter by title
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query

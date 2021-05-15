@@ -24,7 +24,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[title]' => '%JsonApi%']);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(1, 'data')
             ->assertSee('Implements JsonApi on Laravel')
             ->assertDontSee('Another Article');
@@ -44,7 +44,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[content]' => '%by%']);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(1, 'data')
             ->assertSee('Filter by Content Test')
             ->assertDontSee('Another Article');
@@ -64,7 +64,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[year]' => 2020]);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(1, 'data')
             ->assertSee('Newer Article')
             ->assertDontSee('Another Article');
@@ -85,7 +85,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[month]' => 5]);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(2, 'data')
             ->assertSee('Article From May')
             ->assertSee('Another Article From May')
@@ -101,7 +101,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[unknown]' => 2]);
 
-        $this->getJson($url)->assertStatus(400);
+        $this->jsonApi()->get($url)->assertStatus(400);
     }
 
     /**
@@ -119,7 +119,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[search]' => '%Laravel%']);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(2, 'data')
             ->assertSee('Laravel Article')
             ->assertSee('PHP Article')
@@ -143,7 +143,7 @@ class FilterArticlesTest extends TestCase
 
         $url = route('api.v1.articles.index', ['filter[search]' => '%Laravel% %Docker%']);
 
-        $this->getJson($url)
+        $this->jsonApi()->get($url)
             ->assertJsonCount(3, 'data')
             ->assertSee('Laravel Article')
             ->assertSee('PHP Article')
