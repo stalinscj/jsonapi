@@ -28,6 +28,16 @@ class Article extends Model
     }
 
     /**
+     * Get the user that owns the article.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Scope a query to filter by title
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query
