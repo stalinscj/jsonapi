@@ -3,6 +3,7 @@
 namespace Tests\Feature\Articles;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Article;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +27,7 @@ class UpdateArticlesTest extends TestCase
     /**
      * @test
      */
-    public function authenticated_users_can_update_articles()
+    public function authenticated_users_can_update_their_articles()
     {
         $article = Article::factory()->create();
         
@@ -44,6 +45,29 @@ class UpdateArticlesTest extends TestCase
             ->assertStatus(200);
         
         $this->assertDatabaseHas('articles', $attributes);
+    }
+
+    /**
+     * @test
+     */
+    public function authenticated_users_cannot_update_others_articles()
+    {
+        $article = Article::factory()->create();
+        
+        $attributes = Article::factory()->for($article->user)->raw();
+
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->jsonApi()
+            ->withData([
+                'type'       => 'articles',
+                'id'         => $article->getRouteKey(),
+                'attributes' => $attributes,
+            ])
+            ->patch(route('api.v1.articles.update', $article))
+            ->assertStatus(403);
+        
+        $this->assertDatabaseMissing('articles', $attributes);
     }
 
     /**
