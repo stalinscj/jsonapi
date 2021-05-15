@@ -4,6 +4,7 @@ namespace Tests\Feature\Authors;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ListAuthorsTest extends TestCase
@@ -31,6 +32,11 @@ class ListAuthorsTest extends TestCase
                 ]
             ]
         ]);
+
+        $this->assertTrue(
+            Str::isUuid($response->json('data.id')),
+            "The author's 'id' must be an uuid."
+        );
     }
 
     /**
