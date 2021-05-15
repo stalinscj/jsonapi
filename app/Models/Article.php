@@ -15,7 +15,7 @@ class Article extends Model
      *
      * @var string[]
      */
-    protected $fillable = ['title', 'content', 'category_id', 'user_id'];
+    protected $fillable = ['title', 'slug', 'content', 'category_id', 'user_id'];
 
     /**
      * Scope a query to filter by title
