@@ -3,7 +3,9 @@
 namespace Tests\Feature\Articles;
 
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Article;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateArticlesTest extends TestCase
@@ -13,9 +15,31 @@ class CreateArticlesTest extends TestCase
     /**
      * @test
      */
-    public function can_create_articles()
+    public function guests_users_cannot_create_articles()
     {
-        $article = Article::factory()->raw();
+        $article = Article::factory()->raw(['user_id' => null]);
+
+        $this->jsonApi()
+            ->withData([
+                'type'       => 'articles',
+                'attributes' => $article,
+            ])
+            ->post(route('api.v1.articles.create'))
+            ->assertUnauthorized();
+        
+        $this->assertDatabaseMissing('articles', $article);
+    }
+
+    /**
+     * @test
+     */
+    public function authenticated_users_can_create_articles()
+    {
+        $user = User::factory()->create();
+
+        $article = Article::factory()->raw(['user_id' => null]);
+
+        Sanctum::actingAs($user);
 
         $this->jsonApi()
             ->withData([
@@ -25,7 +49,7 @@ class CreateArticlesTest extends TestCase
             ->post(route('api.v1.articles.create'))
             ->assertCreated();
         
-        $this->assertDatabaseHas('articles', $article);
+        $this->assertDatabaseHas('articles', array_merge($article, ['user_id' => $user->id]));
     }
 
     /**
@@ -34,6 +58,8 @@ class CreateArticlesTest extends TestCase
     public function title_is_required()
     {
         $article = Article::factory()->raw(['title' => '']);
+
+        Sanctum::actingAs(User::factory()->create());
 
         $this->jsonApi()
             ->withData([
@@ -54,6 +80,8 @@ class CreateArticlesTest extends TestCase
     {
         $article = Article::factory()->raw(['content' => '']);
 
+        Sanctum::actingAs(User::factory()->create());
+
         $this->jsonApi()
             ->withData([
                 'type'       => 'articles',
@@ -72,6 +100,8 @@ class CreateArticlesTest extends TestCase
     public function slug_is_required()
     {
         $article = Article::factory()->raw(['slug' => '']);
+
+        Sanctum::actingAs(User::factory()->create());
 
         $this->jsonApi()
             ->withData([
@@ -93,6 +123,8 @@ class CreateArticlesTest extends TestCase
         Article::factory()->create(['slug' => 'same-slug']);
         
         $article = Article::factory()->raw(['slug' => 'same-slug']);
+
+        Sanctum::actingAs(User::factory()->create());
 
         $this->jsonApi()
             ->withData([

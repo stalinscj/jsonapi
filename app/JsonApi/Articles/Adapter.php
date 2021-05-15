@@ -44,4 +44,17 @@ class Adapter extends AbstractAdapter
         $this->filterWithScopes($query, $filters);
     }
 
+    /**
+     * Fill the record attributes
+     *
+     * @param $record
+     * @param Collection $attributes
+     * @return void
+     */
+    protected function fillAttributes($record, Collection $attributes)
+    {
+        $record->fill($attributes->toArray());
+        $record->user_id = auth()->id();
+    }
+
 }
