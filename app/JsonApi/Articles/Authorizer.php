@@ -11,6 +11,13 @@ class Authorizer extends AbstractAuthorizer
 {
 
     /**
+     * The guards to use to authenticate a user.
+     *
+     * @var array
+     */
+    protected $guards = ['sanctum'];
+
+    /**
      * Authorize a resource index request.
      *
      * @param string $type
@@ -39,7 +46,7 @@ class Authorizer extends AbstractAuthorizer
      */
     public function create($type, $request)
     {
-        // TODO: Implement create() method.
+        $this->authenticate();
     }
 
     /**
@@ -71,7 +78,7 @@ class Authorizer extends AbstractAuthorizer
      */
     public function update($article, $request)
     {
-        $this->authorize('update', $article);
+        $this->can('update', $article);
     }
 
     /**
@@ -87,7 +94,7 @@ class Authorizer extends AbstractAuthorizer
      */
     public function delete($article, $request)
     {
-        $this->authorize('delete', $article);
+        $this->can('delete', $article);
     }
 
 }
