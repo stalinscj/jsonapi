@@ -16,7 +16,7 @@ use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 
 JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
 
-    $api->resource('articles')->only('create', 'update')->middleware('auth');
-    $api->resource('articles')->except('create', 'update');
+    $api->resource('articles')->only('create', 'update', 'delete')->middleware('auth');
+    $api->resource('articles')->except('create', 'update', 'delete');
     
 });
