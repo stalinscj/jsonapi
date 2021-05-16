@@ -4,6 +4,7 @@ namespace App\JsonApi\Articles;
 
 use App\Rules\Slug;
 use Illuminate\Validation\Rule;
+use CloudCreativity\LaravelJsonApi\Rules\HasOne;
 use CloudCreativity\LaravelJsonApi\Validation\AbstractValidators;
 
 class Validators extends AbstractValidators
@@ -52,6 +53,10 @@ class Validators extends AbstractValidators
                 'alpha_dash',
                 Rule::unique('articles')->ignore($record),
                 new Slug
+            ],
+            'categories' => [
+                Rule::requiredIf(! $record),
+                new HasOne
             ],
         ];
     }
