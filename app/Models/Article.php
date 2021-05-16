@@ -117,6 +117,19 @@ class Article extends Model
         return $query;
     }
 
-
+    /**
+     * Scope a query to filter by categories
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCategories($query, $values)
+    {
+        return $query->whereHas('category', function ($query) use ($values) {
+            return $query->whereIn('slug', explode(',', $values));
+        });
+    }
 
 }
