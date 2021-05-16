@@ -15,4 +15,14 @@ class Category extends Model
      * @var string[]
      */
     protected $fillable = ['name'];
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }
