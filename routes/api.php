@@ -19,7 +19,7 @@ JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
 
     $api->resource('articles')
         ->relationships(function (RelationshipsRegistration $api) {
-            $api->hasOne('authors');
+            $api->hasOne('authors')->except('replace');
         });
 
     $api->resource('authors')->only('index', 'read');
