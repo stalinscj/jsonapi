@@ -24,6 +24,6 @@ JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
 
     $api->resource('authors')->only('index', 'read');
         
-    $api->resource('categories')->only('index', 'read');
+    $api->resource('categories');
     
 });
