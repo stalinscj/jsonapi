@@ -20,10 +20,18 @@ JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
     $api->resource('articles')
         ->relationships(function (RelationshipsRegistration $api) {
             $api->hasOne('authors')->except('replace');
+            $api->hasOne('categories')->except('replace');
         });
 
-    $api->resource('authors')->only('index', 'read');
+    $api->resource('authors')
+        ->only('index', 'read')
+        ->relationships(function (RelationshipsRegistration $api) {
+            $api->hasMany('articles')->except('replace', 'add', 'remove');
+        });
         
-    $api->resource('categories');
+    $api->resource('categories')
+        ->relationships(function (RelationshipsRegistration $api) {
+            $api->hasMany('articles')->except('replace', 'add', 'remove');
+        });
     
 });

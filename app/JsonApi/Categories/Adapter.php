@@ -44,4 +44,14 @@ class Adapter extends AbstractAdapter
         $this->filterWithScopes($query, $filters);
     }
 
+    /**
+     * Get the articles for the category.
+     * 
+     * @return \CloudCreativity\LaravelJsonApi\Eloquent\HasMany
+     */
+    public function articles()
+    {
+        return $this->hasMany();
+    }
+
 }

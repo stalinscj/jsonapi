@@ -35,4 +35,27 @@ class Schema extends SchemaProvider
             'updatedAt' => $category->updated_at->toAtomString(),
         ];
     }
+
+    /**
+     * Get category links.
+     *
+     * @param object $category
+     * @param bool   $isPrimary
+     * @param array  $includeRelationships A list of relationships that will be included as full categories.
+     *
+     * @return array
+     */
+    public function getRelationships($category, $isPrimary, array $includeRelationships)
+    {
+        return [
+            'articles' => [
+                self::SHOW_RELATED => true,
+                self::SHOW_SELF    => true,
+                self::SHOW_DATA    => isset($includeRelationships['articles']),
+                self::DATA         => function () use ($category) {
+                    return $category->articles;
+                }
+            ]
+        ];
+    }
 }

@@ -33,4 +33,27 @@ class Schema extends SchemaProvider
             'name' => $author->name,
         ];
     }
+
+    /**
+     * Get author links.
+     *
+     * @param object $author
+     * @param bool   $isPrimary
+     * @param array  $includeRelationships A list of relationships that will be included as full authors.
+     *
+     * @return array
+     */
+    public function getRelationships($author, $isPrimary, array $includeRelationships)
+    {
+        return [
+            'articles' => [
+                self::SHOW_RELATED => true,
+                self::SHOW_SELF    => true,
+                self::SHOW_DATA    => isset($includeRelationships['articles']),
+                self::DATA         => function () use ($author) {
+                    return $author->articles;
+                }
+            ]
+        ];
+    }
 }

@@ -20,7 +20,7 @@ class ListAuthorsTest extends TestCase
 
         $response = $this->jsonApi()->get(route('api.v1.authors.read', $author));
 
-        $response->assertExactJson([
+        $response->assertJson([
             'data' => [
                 'type'       => 'authors',
                 'id'         => (string) $author->getRouteKey(),
@@ -48,7 +48,7 @@ class ListAuthorsTest extends TestCase
 
         $response = $this->jsonApi()->get(route('api.v1.authors.index'));
 
-        $response->assertJsonFragment([
+        $response->assertJson([
             'data' => [
                 [
                     'type'       => 'authors',

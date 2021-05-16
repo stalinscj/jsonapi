@@ -25,4 +25,15 @@ class Category extends Model
     {
         return 'slug';
     }
+
+    /**
+     * Get the articles for the cateogry.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
 }

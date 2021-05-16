@@ -43,6 +43,6 @@ class IncludeAuthorsTest extends TestCase
         
         $this->jsonApi()
             ->get(route('api.v1.articles.relationships.authors.read', $article))
-            ->assertSee($article->user->id);
+            ->assertSee($article->user->getRouteKey());
     }
 }

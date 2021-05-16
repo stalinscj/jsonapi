@@ -38,6 +38,16 @@ class Article extends Model
     }
 
     /**
+     * Get the category that owns the article.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
      * Scope a query to filter by title
      *
      * @param \Illuminate\Database\Eloquent\Builder  $query

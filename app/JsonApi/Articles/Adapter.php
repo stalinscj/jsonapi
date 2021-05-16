@@ -23,7 +23,8 @@ class Adapter extends AbstractAdapter
      * @var array
      */
     protected $includePaths = [
-        'authors' => 'user',
+        'authors'    => 'user',
+        'categories' => 'category',
     ];
 
     /**
@@ -74,6 +75,16 @@ class Adapter extends AbstractAdapter
     public function authors()
     {
         return $this->belongsTo('user');
+    }
+
+    /**
+     * Get the category that owns the article.
+     * 
+     * @return \CloudCreativity\LaravelJsonApi\Eloquent\BelongsTo
+     */
+    public function categories()
+    {
+        return $this->belongsTo('category');
     }
 
 }
