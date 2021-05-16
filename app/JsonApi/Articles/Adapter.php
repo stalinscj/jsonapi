@@ -66,4 +66,14 @@ class Adapter extends AbstractAdapter
         $article->user_id = auth()->id();
     }
 
+    /**
+     * Get the author that owns the article.
+     * 
+     * @return \CloudCreativity\LaravelJsonApi\Eloquent\BelongsTo
+     */
+    public function authors()
+    {
+        return $this->belongsTo('user');
+    }
+
 }
