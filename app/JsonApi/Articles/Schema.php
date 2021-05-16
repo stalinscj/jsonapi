@@ -50,7 +50,9 @@ class Schema extends SchemaProvider
     {
         return [
             'authors' => [
-                'data' => function () use ($article) {
+                'related'  => true,
+                'showSelf' => true,
+                'data'     => function () use ($article) {
                     return $article->user;
                 }
             ]

@@ -2,6 +2,7 @@
 
 use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
 use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
+use CloudCreativity\LaravelJsonApi\Routing\RelationshipsRegistration;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,11 @@ use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 
 JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
 
-    $api->resource('articles');
+    $api->resource('articles')
+        ->relationships(function (RelationshipsRegistration $api) {
+            $api->hasOne('authors');
+        });
+
     $api->resource('authors')->only('index', 'read');
     
 });
