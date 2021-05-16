@@ -17,6 +17,16 @@ trait HasUuid
     }
 
     /**
+     * Get the auto-incrementing key type.
+     *
+     * @return string
+     */
+    public function getKeyType()
+    {
+        return 'string';
+    }
+
+    /**
      * Perform any actions required after the model boots.
      *
      * @return void

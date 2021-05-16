@@ -10,13 +10,21 @@ use CloudCreativity\LaravelJsonApi\Pagination\StandardStrategy;
 
 class Adapter extends AbstractAdapter
 {
-
     /**
      * Mapping of JSON API attribute field names to model keys.
      *
      * @var array
      */
     protected $attributes = [];
+
+    /**
+     * Mapping of JSON API include paths to model relationship paths.
+     *
+     * @var array
+     */
+    protected $includePaths = [
+        'authors' => 'user',
+    ];
 
     /**
      * Mapping of JSON API filter names to model scopes.

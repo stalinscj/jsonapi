@@ -6,7 +6,6 @@ use Neomerx\JsonApi\Schema\SchemaProvider;
 
 class Schema extends SchemaProvider
 {
-
     /**
      * @var string
      */
@@ -33,8 +32,28 @@ class Schema extends SchemaProvider
             'title'     => $article->title,
             'slug'      => $article->slug,
             'content'   => $article->content,
-            'createdAt' => $article->created_at,
-            'updatedAt' => $article->updated_at,
+            'createdAt' => $article->created_at->toAtomString(),
+            'updatedAt' => $article->updated_at->toAtomString(),
+        ];
+    }
+
+    /**
+     * Get article links.
+     *
+     * @param object $article
+     * @param bool   $isPrimary
+     * @param array  $includeRelationships A list of relationships that will be included as full articles.
+     *
+     * @return array
+     */
+    public function getRelationships($article, $isPrimary, array $includeRelationships)
+    {
+        return [
+            'authors' => [
+                'data' => function () use ($article) {
+                    return $article->user;
+                }
+            ]
         ];
     }
 }
