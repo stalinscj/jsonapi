@@ -36,7 +36,7 @@ class UpdateArticlesTest extends TestCase
             ->for($article->category)
             ->raw();
 
-        Sanctum::actingAs($article->user);
+        Sanctum::actingAs($article->user, ['articles:update']);
 
         $this->jsonApi()
             ->withData([
@@ -63,6 +63,45 @@ class UpdateArticlesTest extends TestCase
         
         $this->assertDatabaseHas('articles', $attributes);
     }
+    /**
+     * @test
+     */
+    public function authenticated_users_cannot_update_their_articles_without_permissions()
+    {
+        $article = Article::factory()->create();
+        
+        $attributes = Article::factory()
+            ->for($article->user)
+            ->for($article->category)
+            ->raw();
+
+        Sanctum::actingAs($article->user);
+
+        $this->jsonApi()
+            ->withData([
+                'type'       => 'articles',
+                'id'         => $article->getRouteKey(),
+                'attributes' => $attributes,
+                'relationships' => [
+                    'authors' => [
+                        'data' => [
+                            'id'   => $article->user->getRouteKey(),
+                            'type' => 'authors',
+                        ]
+                    ],
+                    'categories' => [
+                        'data' => [
+                            'id'   => $article->category->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
+            ])
+            ->patch(route('api.v1.articles.update', $article))
+            ->assertForbidden();
+        
+        $this->assertDatabaseMissing('articles', $attributes);
+    }
 
     /**
      * @test
@@ -73,7 +112,7 @@ class UpdateArticlesTest extends TestCase
         
         $attributes = Article::factory()->for($article->user)->raw();
 
-        Sanctum::actingAs(User::factory()->create());
+        Sanctum::actingAs(User::factory()->create(), ['articles:update']);
 
         $this->jsonApi()
             ->withData([
@@ -94,7 +133,7 @@ class UpdateArticlesTest extends TestCase
     {
         $article = Article::factory()->create();
         
-        Sanctum::actingAs($article->user);
+        Sanctum::actingAs($article->user, ['articles:update']);
 
         $this->jsonApi()
             ->withData([
@@ -115,7 +154,7 @@ class UpdateArticlesTest extends TestCase
     {
         $article = Article::factory()->create();
         
-        Sanctum::actingAs($article->user);
+        Sanctum::actingAs($article->user, ['articles:update']);
 
         $this->jsonApi()
             ->withData([
