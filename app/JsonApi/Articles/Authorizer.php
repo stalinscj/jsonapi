@@ -2,10 +2,11 @@
 
 namespace App\JsonApi\Articles;
 
-use CloudCreativity\LaravelJsonApi\Auth\AbstractAuthorizer;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use CloudCreativity\LaravelJsonApi\Auth\AbstractAuthorizer;
 
 class Authorizer extends AbstractAuthorizer
 {
@@ -99,6 +100,26 @@ class Authorizer extends AbstractAuthorizer
     public function delete($article, $request)
     {
         $this->can('delete', $article);
+    }
+
+    /**
+    * Authorize a modify relationship request.
+    *
+    * @param object $record
+    *      the domain record.
+    * @param string $field
+    *      the JSON API field name for the relationship.
+    * @param Request $request
+    *      the inbound request.
+    * @return void
+    * @throws AuthenticationException|AuthorizationException
+    *      if the request is not authorized.
+    */
+    public function modifyRelationship($record, $field, $request)
+    {
+        $ability = Str::camel('modify-'.$field);
+
+        $this->can($ability, $record);
     }
 
 }

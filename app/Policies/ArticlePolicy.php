@@ -48,4 +48,30 @@ class ArticlePolicy
             $user->id == $article->user_id;
     }
 
+    /**
+     * Determine whether the user can update the model's categories.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Article  $article
+     * @return mixed
+     */
+    public function modifyCategories(User $user, $article)
+    {
+        return $user->tokenCan('articles:modify-categories') &&
+            $user->id == $article->user_id;
+    }
+
+    /**
+     * Determine whether the user can update the model's authors.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Article  $article
+     * @return mixed
+     */
+    public function modifyAuthors(User $user, $article)
+    {
+        return $user->tokenCan('articles:modify-authors') &&
+            $user->id == $article->user_id;
+    }
+
 }
