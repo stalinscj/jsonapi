@@ -55,19 +55,6 @@ class Adapter extends AbstractAdapter
     }
 
     /**
-     * Fill the article attributes
-     *
-     * @param $article
-     * @param Collection $attributes
-     * @return void
-     */
-    protected function fillAttributes($article, Collection $attributes)
-    {
-        $article->fill($attributes->toArray());
-        $article->user_id = auth()->id();
-    }
-
-    /**
      * Get the author that owns the article.
      * 
      * @return \CloudCreativity\LaravelJsonApi\Eloquent\BelongsTo

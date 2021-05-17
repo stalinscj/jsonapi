@@ -11,6 +11,23 @@ class ArticlePolicy
     use HandlesAuthorization;
 
     /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        $authorId = request()->json('data.relationships.authors.data.id');
+        
+        if ($authorId) {
+            return $user->id == $authorId;
+        }
+
+        return true;
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user

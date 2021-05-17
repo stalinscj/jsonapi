@@ -49,6 +49,12 @@ class CreateArticlesTest extends TestCase
                 'type'          => 'articles',
                 'attributes'    => $article,
                 'relationships' => [
+                    'authors' => [
+                        'data' => [
+                            'id'   => $user->getRouteKey(),
+                            'type' => 'authors',
+                        ]
+                    ],
                     'categories' => [
                         'data' => [
                             'id'   => $category->getRouteKey(),
@@ -64,6 +70,44 @@ class CreateArticlesTest extends TestCase
         $article['category_id'] = $category->id;
 
         $this->assertDatabaseHas('articles', $article);
+    }
+
+    /**
+     * @test
+     */
+    public function authenticated_users_cannot_create_articles_on_behalf_of_another_users()
+    {
+        $user = User::factory()->create();
+
+        $category = Category::factory()->create();
+
+        $article = Article::factory()->raw(['user_id' => null, 'category_id' => null]);
+
+        Sanctum::actingAs($user);
+
+        $this->jsonApi()
+            ->withData([
+                'type'          => 'articles',
+                'attributes'    => $article,
+                'relationships' => [
+                    'authors' => [
+                        'data' => [
+                            'id'   => User::factory()->create()->getRouteKey(),
+                            'type' => 'authors',
+                        ]
+                    ],
+                    'categories' => [
+                        'data' => [
+                            'id'   => $category->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
+            ])
+            ->post(route('api.v1.articles.create'))
+            ->assertForbidden();
+        
+        $this->assertDatabaseCount('articles', 0);
     }
 
     /**
@@ -257,7 +301,7 @@ class CreateArticlesTest extends TestCase
             ->assertStatus(422)
             ->assertJsonFragment(['source' => ['pointer' => '/data']]);
         
-        $this->assertDatabaseMissing('articles', $article);
+        $this->assertDatabaseCount('articles', 0);
     }
 
     /**
@@ -265,7 +309,7 @@ class CreateArticlesTest extends TestCase
      */
     public function categories_must_be_a_relationship_object()
     {
-        $article = Article::factory()->raw(['category_id' => null]);
+        $article = Article::factory()->raw();
 
         $article['categories'] = 'invalid';
 
@@ -280,7 +324,67 @@ class CreateArticlesTest extends TestCase
             ->assertStatus(422)
             ->assertSee('\/data\/attributes\/categories');
         
-        $this->assertDatabaseMissing('articles', $article);
+        $this->assertDatabaseCount('articles', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function authors_is_required()
+    {
+        $article = Article::factory()->raw(['user_id' => null]);
+
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->jsonApi()
+            ->withData([
+                'type'       => 'articles',
+                'attributes' => $article,
+                'relationships' => [
+                    'categories' => [
+                        'data' => [
+                            'id'   => Category::factory()->create()->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
+            ])
+            ->post(route('api.v1.articles.create'))
+            ->assertStatus(422)
+            ->assertJsonFragment(['source' => ['pointer' => '/data']]);
+        
+        $this->assertDatabaseCount('articles', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function authors_must_be_a_relationship_object()
+    {
+        $article = Article::factory()->raw();
+
+        $article['authors'] = 'invalid';
+
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->jsonApi()
+            ->withData([
+                'type'       => 'articles',
+                'attributes' => $article,
+                'relationships' => [
+                    'categories' => [
+                        'data' => [
+                            'id'   => Category::factory()->create()->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
+            ])
+            ->post(route('api.v1.articles.create'))
+            ->assertStatus(422)
+            ->assertSee('\/data\/attributes\/authors');
+        
+        $this->assertDatabaseCount('articles', 0);
     }
 
 }

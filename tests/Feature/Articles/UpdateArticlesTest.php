@@ -31,7 +31,10 @@ class UpdateArticlesTest extends TestCase
     {
         $article = Article::factory()->create();
         
-        $attributes = Article::factory()->for($article->user)->raw();
+        $attributes = Article::factory()
+            ->for($article->user)
+            ->for($article->category)
+            ->raw();
 
         Sanctum::actingAs($article->user);
 
@@ -40,6 +43,20 @@ class UpdateArticlesTest extends TestCase
                 'type'       => 'articles',
                 'id'         => $article->getRouteKey(),
                 'attributes' => $attributes,
+                'relationships' => [
+                    'authors' => [
+                        'data' => [
+                            'id'   => $article->user->getRouteKey(),
+                            'type' => 'authors',
+                        ]
+                    ],
+                    'categories' => [
+                        'data' => [
+                            'id'   => $article->category->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
             ])
             ->patch(route('api.v1.articles.update', $article))
             ->assertStatus(200);
