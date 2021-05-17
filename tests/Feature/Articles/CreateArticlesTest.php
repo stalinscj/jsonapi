@@ -42,7 +42,7 @@ class CreateArticlesTest extends TestCase
 
         $article = Article::factory()->raw(['user_id' => null, 'category_id' => null]);
 
-        Sanctum::actingAs($user);
+        Sanctum::actingAs($user, ['articles:create']);
 
         $this->jsonApi()
             ->withData([
@@ -93,6 +93,44 @@ class CreateArticlesTest extends TestCase
                     'authors' => [
                         'data' => [
                             'id'   => User::factory()->create()->getRouteKey(),
+                            'type' => 'authors',
+                        ]
+                    ],
+                    'categories' => [
+                        'data' => [
+                            'id'   => $category->getRouteKey(),
+                            'type' => 'categories',
+                        ]
+                    ]
+                ]
+            ])
+            ->post(route('api.v1.articles.create'))
+            ->assertForbidden();
+        
+        $this->assertDatabaseCount('articles', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function authenticated_users_cannot_create_articles_without_permissions()
+    {
+        $user = User::factory()->create();
+
+        $category = Category::factory()->create();
+
+        $article = Article::factory()->raw();
+
+        Sanctum::actingAs($user);
+
+        $this->jsonApi()
+            ->withData([
+                'type'          => 'articles',
+                'attributes'    => $article,
+                'relationships' => [
+                    'authors' => [
+                        'data' => [
+                            'id'   => $user->getRouteKey(),
                             'type' => 'authors',
                         ]
                     ],

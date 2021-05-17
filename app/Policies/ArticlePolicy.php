@@ -18,13 +18,8 @@ class ArticlePolicy
      */
     public function create(User $user)
     {
-        $authorId = request()->json('data.relationships.authors.data.id');
-        
-        if ($authorId) {
-            return $user->id == $authorId;
-        }
-
-        return true;
+        return $user->tokenCan('articles:create') &&
+            $user->id == request()->json('data.relationships.authors.data.id');
     }
 
     /**
