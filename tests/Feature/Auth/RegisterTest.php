@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -186,6 +187,17 @@ class RegisterTest extends TestCase
             ->assertJsonValidationErrors([
                 'device_name' => trans('validation.required', ['attribute' => 'device name'])
             ]);
+    }
+
+    /**
+     * @test
+     */
+    public function cannot_register_twice()
+    {
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson(route('api.v1.register'))
+            ->assertNoContent();
     }
 
 }

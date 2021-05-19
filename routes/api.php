@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\RegisterController;
 use CloudCreativity\LaravelJsonApi\Facades\JsonApi;
@@ -42,4 +43,6 @@ JsonApi::register('v1')->routes(function (RouteRegistrar $api) {
     Route::post('logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
     
     Route::post('register', [RegisterController::class, 'register'])->name('register')->middleware('guest:sanctum');
+    
+    Route::get('user', UserController::class)->name('user')->middleware('auth:sanctum');
 });
