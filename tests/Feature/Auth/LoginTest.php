@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Permission;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -32,6 +33,34 @@ class LoginTest extends TestCase
             PersonalAccessToken::findToken($token),
             'The plain text token is invalid'
         );
+    }
+
+    /**
+     * @test
+     */
+    public function user_permissions_are_assigned_as_abilities_to_the_token_response()
+    {
+        $user = User::factory()->create();
+
+        $permissions = Permission::factory(3)
+            ->create()
+            ->each(function ($permission) use ($user) {
+                $user->givePermissionTo($permission);
+            });
+
+        $response = $this->postJson(
+                route('api.v1.login', ['email' => $user->email, 'password' => 'password', 'device_name' => '.'])
+            )
+            ->assertOk();
+            
+        $token = PersonalAccessToken::findToken($response->json('plain-text-token'));
+            
+        $permissions->each(function ($permission) use ($token) {
+            $this->assertTrue($token->can($permission->name));
+        });
+        
+        $this->assertFalse($token->can('unassigned-permission'));
+
     }
 
     /**
