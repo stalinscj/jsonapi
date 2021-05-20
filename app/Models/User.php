@@ -53,4 +53,27 @@ class User extends Authenticatable
         return $this->hasMany(Article::class);
     }
 
+    /**
+     * The permissions that belong to the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
+
+    /**
+     * Give permission to a user
+     *
+     * @param \App\Models\Permission $permission
+     * @return \App\Models\User
+     */
+    public function givePermissionTo(Permission $permission)
+    {
+        $this->permissions()->syncWithoutDetaching($permission);
+
+        return $this;
+    }
+
 }
