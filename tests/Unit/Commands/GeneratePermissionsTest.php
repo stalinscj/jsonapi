@@ -18,7 +18,12 @@ class GeneratePermissionsTest extends TestCase
     public function can_generate_permissions_for_registered_api_resources()
     {
         config([
-            'json-api-v1.resources' => array_flip($this->faker->words(4))
+            'json-api-v1.resources' => [
+                'resource1' => 'class1',
+                'resource2' => 'class2',
+                'resource3' => 'class3',
+                'resource4' => 'class4',
+            ]
         ]);
         
         $this->artisan('generate:permissions')
@@ -37,6 +42,6 @@ class GeneratePermissionsTest extends TestCase
         $this->artisan('generate:permissions')
             ->expectsOutput('Permissions generated!');
 
-        $this->assertDatabaseCount('permissions', 4*count($abilities));
+        $this->assertDatabaseCount('permissions', 16);
     }
 }
