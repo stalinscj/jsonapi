@@ -132,4 +132,19 @@ class Article extends Model
         });
     }
 
+    /**
+     * Scope a query to filter by authors
+     *
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string
+     * 
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAuthors($query, $values)
+    {
+        return $query->whereHas('user', function ($query) use ($values) {
+            return $query->whereIn('name', explode(',', $values));
+        });
+    }
+
 }
